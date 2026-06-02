@@ -6,4 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000"
-    tools:context=".MainActivity" />
+    tools:context=".MainActivity" >
+
+    <Button
+        android:id="@+id/btnProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="profile"
+        tools:layout_editor_absoluteX="43dp"
+        tools:layout_editor_absoluteY="137dp" />
+</androidx.constraintlayout.widget.ConstraintLayout>
