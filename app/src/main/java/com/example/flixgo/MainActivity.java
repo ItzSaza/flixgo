@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     MovieAdapter adapter;
 
     // Replace with your team's TMDB API Key
-    String API_KEY = "PASTE_API_KEY_HERE";
+    String API_KEY = "ebe03d995dffa21748ee1c932f8c2eb6";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
