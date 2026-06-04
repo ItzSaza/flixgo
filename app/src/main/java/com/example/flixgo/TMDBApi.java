@@ -1,7 +1,5 @@
 package com.example.flixgo;
 
-import com.example.flixgo.ReviewResponse;
-
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
