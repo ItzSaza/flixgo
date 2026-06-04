@@ -2,58 +2,103 @@ package com.example.flixgo;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ImageView;
+import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import java.util.ArrayList;
 
 public class HomeActivity extends AppCompatActivity {
 
-    FloatingActionButton btnSearch;
-    ImageView btnProfile;
-    RecyclerView recyclerView;
-    MovieAdapter adapter;
-    ArrayList<Movie> movieList;
+    Button btnWatchTrailer, btnViewReviews;
+    RecyclerView recyclerHome, recyclerTopRated;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        btnSearch = findViewById(R.id.btnSearch);
-        btnProfile = findViewById(R.id.btnProfile);
-        recyclerView = findViewById(R.id.recyclerHome);
+        try {
 
-        recyclerView.setLayoutManager(
+            btnWatchTrailer = findViewById(R.id.btnWatchTrailer);
+            btnViewReviews = findViewById(R.id.btnViewReviews);
+
+            recyclerHome = findViewById(R.id.recyclerHome);
+            recyclerTopRated = findViewById(R.id.recyclerTopRated);
+
+            // NAVIGATION SAFE
+            btnWatchTrailer.setOnClickListener(v ->
+                    startActivity(new Intent(HomeActivity.this, WatchTrailerActivity.class))
+            );
+
+            btnViewReviews.setOnClickListener(v ->
+                    startActivity(new Intent(HomeActivity.this, ViewReviewsActivity.class))
+            );
+
+            // DATA
+            ArrayList<String> movies = new ArrayList<>();
+            movies.add("Batman (2022)");
+            movies.add("Joker");
+            movies.add("Inception");
+            movies.add("Interstellar");
+
+            ArrayList<String> topRated = new ArrayList<>();
+            topRated.add("The Dark Knight");
+            topRated.add("Fight Club");
+            topRated.add("Avengers Endgame");
+
+            setupRecycler(recyclerHome, movies);
+            setupRecycler(recyclerTopRated, topRated);
+
+        } catch (Exception e) {
+            Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void setupRecycler(RecyclerView recycler, ArrayList<String> data) {
+
+        recycler.setLayoutManager(
                 new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         );
 
-        movieList = new ArrayList<>();
+        recycler.setAdapter(new RecyclerView.Adapter<VH>() {
 
-        // SAMPLE MOVIES (rating is double ✔)
-        movieList.add(new Movie("Batman", "2022", 8.5, "poster_url"));
-        movieList.add(new Movie("Avengers", "2019", 9.0, "poster_url"));
+            @Override
+            public VH onCreateViewHolder(android.view.ViewGroup parent, int viewType) {
+                android.widget.TextView tv = new android.widget.TextView(parent.getContext());
+                tv.setPadding(40, 40, 40, 40);
+                tv.setTextColor(android.graphics.Color.WHITE);
+                tv.setBackgroundColor(0xFF1A1A1A);
+                return new VH(tv);
+            }
 
-        // IMPORTANT: use correct constructor (1 argument)
-        adapter = new MovieAdapter(movieList);
+            @Override
+            public void onBindViewHolder(VH holder, int position) {
+                holder.tv.setText(data.get(position));
 
-        recyclerView.setAdapter(adapter);
+                holder.itemView.setOnClickListener(v ->
+                        Toast.makeText(HomeActivity.this,
+                                data.get(position),
+                                Toast.LENGTH_SHORT).show()
+                );
+            }
 
-        // 🔍 Search button
-        btnSearch.setOnClickListener(view -> {
-            Intent intent = new Intent(HomeActivity.this, MainActivity.class);
-            startActivity(intent);
+            @Override
+            public int getItemCount() {
+                return data.size();
+            }
         });
+    }
 
-        // 👤 Profile button
-        btnProfile.setOnClickListener(view -> {
-            Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
-            startActivity(intent);
-        });
+    static class VH extends RecyclerView.ViewHolder {
+        android.widget.TextView tv;
+
+        VH(android.view.View itemView) {
+            super(itemView);
+            tv = (android.widget.TextView) itemView;
+        }
     }
 }
