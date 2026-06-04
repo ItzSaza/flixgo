@@ -6,26 +6,30 @@
     android:background="#000000">
 
     <!-- Banner -->
-    <ImageView
-        android:id="@+id/banner"
-        android:layout_width="match_parent"
-        android:layout_height="220dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/applogo"
-        android:contentDescription="banner" />
 
     <!-- Profile Button -->
+
+    <!-- Title -->
+    <ImageView
+        android:id="@+id/banner"
+        android:layout_width="194dp"
+        android:layout_height="94dp"
+        android:contentDescription="banner"
+        android:scaleType="centerCrop"
+        android:src="@drawable/applogo" />
+
     <ImageView
         android:id="@+id/btnProfile"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_alignParentEnd="true"
         android:layout_margin="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:contentDescription="profile"
         android:src="@android:drawable/ic_menu_myplaces"
-        app:tint="#FFFFFF"
-        android:contentDescription="profile" />
+        app:tint="#FFFFFF" />
 
-    <!-- Title -->
     <TextView
         android:id="@+id/tvPopular"
         android:layout_width="wrap_content"
