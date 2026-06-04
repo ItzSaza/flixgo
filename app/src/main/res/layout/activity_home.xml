@@ -1,115 +1,182 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="#0D0D0D">
 
-    <!-- HERO SECTION -->
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="220dp">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <ImageView
+        <!-- HERO SECTION (FEATURED MOVIE) -->
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/applogo"
-            android:scaleType="centerCrop"/>
+            android:layout_height="450dp">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#88000000"/>
+            <ImageView
+                android:id="@+id/imgFeatured"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/applogo" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:orientation="vertical"
-            android:padding="16dp">
+            <!-- Top Toolbar Overlay -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/hero_gradient_overlay" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="FLIXGO"
-                android:textColor="#E50914"
-                android:textSize="28sp"
-                android:textStyle="bold"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="112dp"
+                android:padding="16dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Your Cinema, Anytime"
-                android:textColor="#AAAAAA"
-                android:textSize="12sp"
-                android:layout_marginBottom="10dp"/>
+                <ImageView
+                    android:id="@+id/logoF"
+                    android:layout_width="120dp"
+                    android:layout_height="34dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:scaleType="fitStart"
+                    app:srcCompat="@drawable/applogo" />
 
-            <!-- BUTTONS (SAFE VERSION - NO MATERIAL CRASH) -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:id="@+id/btnHomeSearch"
+                        android:layout_width="40dp"
+                        android:layout_height="60dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_search"
+                        app:tint="#FFFFFF" />
+
+                    <ImageButton
+                        android:id="@+id/btnProfile"
+                        android:layout_width="40dp"
+                        android:layout_height="60dp"
+                        android:layout_marginStart="16dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_profile"
+                        app:tint="#FFFFFF" />
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <!-- Featured Movie Info -->
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_gravity="bottom"
+                android:orientation="vertical"
+                android:padding="20dp">
 
-                <Button
-                    android:id="@+id/btnWatchTrailer"
+                <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="42dp"
-                    android:text="▶ Watch Trailer"
-                    android:textColor="#FFFFFF"
+                    android:layout_height="wrap_content"
                     android:background="#E50914"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
-                    android:layout_marginEnd="10dp"/>
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="2dp"
+                    android:text="FEATURED"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
 
-                <Button
-                    android:id="@+id/btnViewReviews"
+                <TextView
+                    android:id="@+id/tvFeaturedTitle"
                     android:layout_width="wrap_content"
-                    android:layout_height="42dp"
-                    android:text="★ View Reviews"
-                    android:textColor="#E50914"
-                    android:background="#222222"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp"/>
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="The Batman"
+                    android:textColor="#FFFFFF"
+                    android:textSize="32sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Action • Crime • Drama"
+                    android:textColor="#CCCCCC"
+                    android:textSize="14sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btnWatchTrailer"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:backgroundTint="#E50914"
+                        android:text="▶ Play"
+                        android:textAllCaps="false"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/btnViewReviews"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="12dp"
+                        android:layout_weight="1"
+                        android:backgroundTint="#333333"
+                        android:text="ℹ Reviews"
+                        android:textAllCaps="false"
+                        android:textColor="#FFFFFF" />
+                </LinearLayout>
             </LinearLayout>
 
-        </LinearLayout>
-    </FrameLayout>
+        </FrameLayout>
 
-    <!-- POPULAR SECTION TITLE -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Popular Movies"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:padding="16dp"/>
+        <!-- POPULAR SECTION TITLE -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Popular Movies"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-    <!-- Recycler 1 -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerHome"
-        android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"/>
+        <!-- Recycler 1 -->
 
-    <!-- TOP RATED TITLE -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Top Rated"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:padding="16dp"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerHome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp" />
 
-    <!-- Recycler 2 -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerTopRated"
-        android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"/>
+        <!-- TOP RATED TITLE -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Top Rated"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-</LinearLayout>
+        <!-- Recycler 2 -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerTopRated"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:clipToPadding="false"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp" />
+
+    </LinearLayout>
+</ScrollView>

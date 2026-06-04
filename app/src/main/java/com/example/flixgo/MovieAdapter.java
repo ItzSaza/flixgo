@@ -1,5 +1,6 @@
 package com.example.flixgo;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +12,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
-    private ArrayList<Movie> movieList;
+    private List<Movie> movieList;
 
-    public MovieAdapter(ArrayList<Movie> movieList) {
+    public MovieAdapter(List<Movie> movieList) {
         this.movieList = movieList;
     }
 
@@ -32,22 +33,26 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
         Movie movie = movieList.get(position);
         holder.tvTitle.setText(movie.getTitle());
-        holder.tvYear.setText(movie.getReleaseDate());
+        holder.tvReleaseDate.setText(movie.getReleaseDate());
         holder.tvRating.setText(String.valueOf(movie.getRating()));
 
-        String posterPath = movie.getPosterPath();
-        String fullImageUrl;
-
-        if (posterPath != null && posterPath.startsWith("/")) {
-            fullImageUrl = "https://image.tmdb.org/t/p/w500" + posterPath;
+        String poster = movie.getPoster();
+        if (poster != null && !poster.isEmpty()) {
+            String posterUrl = "https://image.tmdb.org/t/p/w500" + poster;
+            Glide.with(holder.itemView.getContext())
+                    .load(posterUrl)
+                    .placeholder(R.drawable.applogo)
+                    .error(R.drawable.applogo)
+                    .into(holder.imgPoster);
         } else {
-            fullImageUrl = posterPath;
+            holder.imgPoster.setImageResource(R.drawable.applogo);
         }
 
-        Glide.with(holder.itemView.getContext())
-                .load(fullImageUrl)
-                .placeholder(R.drawable.ic_launcher_background)
-                .into(holder.ivPoster);
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(v.getContext(), MovieDetailsActivity.class);
+            intent.putExtra("movie", movie);
+            v.getContext().startActivity(intent);
+        });
     }
 
     @Override
@@ -55,15 +60,15 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         return movieList.size();
     }
 
-    public static class MovieViewHolder extends RecyclerView.ViewHolder {
-        ImageView ivPoster;
-        TextView tvTitle, tvYear, tvRating;
+    static class MovieViewHolder extends RecyclerView.ViewHolder {
+        ImageView imgPoster;
+        TextView tvTitle, tvReleaseDate, tvRating;
 
         public MovieViewHolder(@NonNull View itemView) {
             super(itemView);
-            ivPoster = itemView.findViewById(R.id.ivPoster);
+            imgPoster = itemView.findViewById(R.id.imgPoster);
             tvTitle = itemView.findViewById(R.id.tvTitle);
-            tvYear = itemView.findViewById(R.id.tvYear);
+            tvReleaseDate = itemView.findViewById(R.id.tvReleaseDate);
             tvRating = itemView.findViewById(R.id.tvRating);
         }
     }

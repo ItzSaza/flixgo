@@ -105,10 +105,10 @@ public class MainActivity extends AppCompatActivity {
                             movie.getString("release_date");
 
                     double rating =
-                            movie.getDouble("vote_average");
+                            movie.optDouble("vote_average", 0.0);
 
                     String poster =
-                            movie.getString("poster_path");
+                            movie.optString("poster_path", "");
 
                     movieList.add(
                             new Movie(

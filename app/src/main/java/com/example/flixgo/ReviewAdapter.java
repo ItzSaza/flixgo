@@ -37,7 +37,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
         return reviewList.size();
     }
 
-    public static class ReviewViewHolder extends RecyclerView.ViewHolder {
+    static class ReviewViewHolder extends RecyclerView.ViewHolder {
         TextView tvAuthor, tvContent;
 
         public ReviewViewHolder(@NonNull View itemView) {
