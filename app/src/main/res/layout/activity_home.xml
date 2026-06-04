@@ -1,65 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000">
+    android:orientation="vertical"
+    android:background="#0D0D0D">
 
-    <!-- Banner -->
+    <!-- HERO SECTION -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="220dp">
 
-    <!-- Profile Button -->
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/applogo"
+            android:scaleType="centerCrop"/>
 
-    <!-- Title -->
-    <ImageView
-        android:id="@+id/banner"
-        android:layout_width="194dp"
-        android:layout_height="94dp"
-        android:contentDescription="banner"
-        android:scaleType="centerCrop"
-        android:src="@drawable/applogo" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#88000000"/>
 
-    <ImageView
-        android:id="@+id/btnProfile"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:contentDescription="profile"
-        android:src="@android:drawable/ic_menu_myplaces"
-        app:tint="#FFFFFF" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:orientation="vertical"
+            android:padding="16dp">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="FLIXGO"
+                android:textColor="#E50914"
+                android:textSize="28sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Your Cinema, Anytime"
+                android:textColor="#AAAAAA"
+                android:textSize="12sp"
+                android:layout_marginBottom="10dp"/>
+
+            <!-- BUTTONS (SAFE VERSION - NO MATERIAL CRASH) -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnWatchTrailer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="42dp"
+                    android:text="▶ Watch Trailer"
+                    android:textColor="#FFFFFF"
+                    android:background="#E50914"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:layout_marginEnd="10dp"/>
+
+                <Button
+                    android:id="@+id/btnViewReviews"
+                    android:layout_width="wrap_content"
+                    android:layout_height="42dp"
+                    android:text="★ View Reviews"
+                    android:textColor="#E50914"
+                    android:background="#222222"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </FrameLayout>
+
+    <!-- POPULAR SECTION TITLE -->
     <TextView
-        android:id="@+id/tvPopular"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/banner"
-        android:layout_margin="16dp"
         android:text="Popular Movies"
-        android:textColor="#FF0000"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:padding="16dp"/>
 
-    <!-- RecyclerView -->
+    <!-- Recycler 1 -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerHome"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tvPopular"
-        android:padding="8dp" />
+        android:layout_height="120dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"/>
 
-    <!-- Floating Search Button -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btnSearch"
-        android:layout_width="wrap_content"
+    <!-- TOP RATED TITLE -->
+    <TextView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="20dp"
-        android:contentDescription="search"
-        android:src="@android:drawable/ic_menu_search"
-        app:backgroundTint="#FF0000"
-        app:tint="#FFFFFF" />
+        android:text="Top Rated"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:padding="16dp"/>
 
-</RelativeLayout>
+    <!-- Recycler 2 -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerTopRated"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"/>
+
+</LinearLayout>
