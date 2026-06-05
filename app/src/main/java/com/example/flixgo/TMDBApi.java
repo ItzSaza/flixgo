@@ -7,15 +7,6 @@ import retrofit2.http.Query;
 
 public interface TMDBApi {
 
-    @GET("movie/now_playing")
-    Call<VideoResponse> getNowPlayingMovies(
-            @Query("api_key") String apiKey
-    );
-
-    @GET("movie/top_rated")
-    Call<VideoResponse> getTopRatedMovies(
-            @Query("api_key") String apiKey
-    );
 
     @GET("movie/{movie_id}/reviews")
     Call<ReviewResponse> getReviews(

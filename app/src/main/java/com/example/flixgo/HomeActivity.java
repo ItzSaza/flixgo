@@ -2,7 +2,6 @@ package com.example.flixgo;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -17,10 +16,6 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class HomeActivity extends AppCompatActivity {
 
     Button btnWatchTrailer, btnViewReviews;
@@ -30,14 +25,13 @@ public class HomeActivity extends AppCompatActivity {
     MovieAdapter adapterHome, adapterTopRated;
     List<Movie> homeMovies, topRatedMovies;
 
-    private final String API_KEY = "ebe03d995dffa21748ee1c932f8c2eb6";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
         try {
+
             btnWatchTrailer = findViewById(R.id.btnWatchTrailer);
             btnViewReviews = findViewById(R.id.btnViewReviews);
             btnHomeSearch = findViewById(R.id.btnHomeSearch);
@@ -64,86 +58,46 @@ public class HomeActivity extends AppCompatActivity {
                     startActivity(new Intent(HomeActivity.this, ProfileActivity.class))
             );
 
-            // Initialize Lists
+            // Load Featured Movie Image
+            Glide.with(this)
+                    .load("https://image.tmdb.org/t/p/w780/74xTEgt7R36Fpooo50r9T25onhq.jpg")
+                    .placeholder(R.drawable.applogo)
+                    .error(R.drawable.applogo)
+                    .into(imgFeatured);
+
+            imgFeatured.setOnClickListener(v -> {
+                // FIXED: Included explicit TMDB ID (414906 for The Batman) using the 5-parameter constructor
+                Movie featuredMovie = new Movie(414906, "The Batman", "2022-03-01", 7.7, "/74xTEgt7R36Fpooo50r9T25onhq.jpg");
+                Intent intent = new Intent(HomeActivity.this, MovieDetailsActivity.class);
+                intent.putExtra("movie", featuredMovie);
+                startActivity(intent);
+            });
+
+            // DATA
+            // FIXED: Added real TMDB IDs as the first parameter for all mock movies
             homeMovies = new ArrayList<>();
+            homeMovies.add(new Movie(414906, "The Batman", "2022-03-01", 7.7, "/74xTEgt7R36Fpooo50r9T25onhq.jpg")); // ID: 414906
+            homeMovies.add(new Movie(475557, "Joker", "2019-10-04", 8.2, "/rzdPqYx7Um4FUZeD8wpXqjAUcEm.jpg"));     // ID: 475557
+            homeMovies.add(new Movie(27205, "Inception", "2010-07-16", 8.4, "/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg"));    // ID: 27205
+            homeMovies.add(new Movie(157336, "Interstellar", "2014-11-07", 8.4, "/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg")); // ID: 157336
+
             topRatedMovies = new ArrayList<>();
+            topRatedMovies.add(new Movie(155, "The Dark Knight", "2008-07-18", 8.5, "/qJ2tW6WMUDux911r6m7haRef0WH.jpg"));      // ID: 155
+            topRatedMovies.add(new Movie(550, "Fight Club", "1999-10-15", 8.4, "/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg"));          // ID: 550
+            topRatedMovies.add(new Movie(299534, "Avengers: Endgame", "2019-04-26", 8.3, "/or06FN3Dka5tukK1e9sl16pB3iy.jpg")); // ID: 299534
 
-            // Setup Adapters and assign them to the Recyclerivews right away
-            adapterHome = new MovieAdapter(homeMovies);
-            adapterTopRated = new MovieAdapter(topRatedMovies);
-
-            setupRecycler(recyclerHome, adapterHome);
-            setupRecycler(recyclerTopRated, adapterTopRated);
-
-            // Fetch dynamic data via API endpoints instead of hardcoding
-            fetchHomeMovies();
-            fetchTopRatedMovies();
+            setupRecycler(recyclerHome, homeMovies);
+            setupRecycler(recyclerTopRated, topRatedMovies);
 
         } catch (Exception e) {
             Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
-    private void setupRecycler(RecyclerView recycler, MovieAdapter adapter) {
+    private void setupRecycler(RecyclerView recycler, List<Movie> data) {
         recycler.setLayoutManager(
                 new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         );
-        recycler.setAdapter(adapter);
-    }
-
-    private void fetchHomeMovies() {
-        TMDBApi api = RetrofitClient.getClient().create(TMDBApi.class);
-        api.getNowPlayingMovies(API_KEY).enqueue(new Callback <VideoResponse>() {
-            @Override
-            public void onResponse(Call<VideoResponse> call, Response<VideoResponse> response) {
-                if (response.isSuccessful() && response.body() != null && response.body().getResults() != null) {
-                    homeMovies.clear();
-                    homeMovies.addAll(response.body().getResults());
-                    adapterHome.notifyDataSetChanged();
-
-                    // Dynamically set the first movie from the API response as the featured banner image
-                    if (!homeMovies.isEmpty()) {
-                        Movie featuredMovie = homeMovies.get(0);
-                        String bannerUrl = "https://image.tmdb.org/t/p/w780" + featuredMovie.getPoster();
-
-                        Glide.with(HomeActivity.this)
-                                .load(bannerUrl)
-                                .placeholder(R.drawable.applogo)
-                                .error(R.drawable.applogo)
-                                .into(imgFeatured);
-
-                        imgFeatured.setOnClickListener(v -> {
-                            Intent intent = new Intent(HomeActivity.this, MovieDetailsActivity.class);
-                            intent.putExtra("movie", featuredMovie);
-                            startActivity(intent);
-                        });
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<VideoResponse> call, Throwable t) {
-                Log.e("HomeActivity", "Failed fetching home movies: " + t.getMessage());
-            }
-        });
-    }
-
-    private void fetchTopRatedMovies() {
-        TMDBApi api = RetrofitClient.getClient().create(TMDBApi.class);
-        api.getTopRatedMovies(API_KEY).enqueue(new Callback<VideoResponse>() {
-            @Override
-            public void onResponse(Call<VideoResponse> call, Response<VideoResponse> response) {
-                if (response.isSuccessful() && response.body() != null && response.body().getResults() != null) {
-                    topRatedMovies.clear();
-                    topRatedMovies.addAll(response.body().getResults());
-                    adapterTopRated.notifyDataSetChanged();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<VideoResponse> call, Throwable t) {
-                Log.e("HomeActivity", "Failed fetching top rated movies: " + t.getMessage());
-            }
-        });
+        recycler.setAdapter(new MovieAdapter(data));
     }
 }
