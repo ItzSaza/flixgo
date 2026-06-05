@@ -3,6 +3,7 @@ package com.example.flixgo;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -34,11 +35,12 @@ public class MovieDetailsActivity extends AppCompatActivity {
     ImageButton btnBack;
     ImageView imgMoviePoster;
     TextView tvMovieTitle, tvMovieReleaseDate, tvMovieRating;
-    MovieDatabaseHelper dbHelper;
     Movie movie;
     FirebaseFirestore firestore;
 
-
+    // Tracks the dynamic video key from TMDB
+    private String trailerKey = null;
+    private final String API_KEY = "ebe03d995dffa21748ee1c932f8c2eb6";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,14 +57,26 @@ public class MovieDetailsActivity extends AppCompatActivity {
         tvMovieReleaseDate = findViewById(R.id.tvMovieReleaseDate);
         tvMovieRating = findViewById(R.id.tvMovieRating);
 
-        dbHelper = new MovieDatabaseHelper(this);
+        // UX Improvement: Disable trailer button until data finishes loading over the network
+        btnTrailer.setEnabled(false);
+        btnTrailer.setText("Loading Trailer...");
+
+
         firestore = FirebaseFirestore.getInstance();
 
         // Get Movie Data from Intent
         movie = (Movie) getIntent().getSerializableExtra("movie");
         if (movie != null) {
             displayMovieDetails(movie);
-            fetchReviews(550); // Using 550 as a placeholder or you could add id to Movie class
+
+            // Debug Log: Check if the movie ID is arriving correctly or passing as 0
+            Log.d("MovieDetailsActivity", "Loading Movie ID: " + movie.getId());
+
+            fetchReviews(movie.getId());
+            fetchMovieTrailer(movie.getId());
+        } else {
+            Toast.makeText(this, "Movie data error", Toast.LENGTH_SHORT).show();
+            btnTrailer.setText("No Trailer");
         }
 
         reviewList = new ArrayList<>();
@@ -73,11 +87,15 @@ public class MovieDetailsActivity extends AppCompatActivity {
         btnBack.setOnClickListener(v -> finish());
 
         btnTrailer.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=SUXWAEX2jlg"));
-            startActivity(intent);
+            if (trailerKey != null && !trailerKey.isEmpty()) {
+                String trailerUrl = "https://www.youtube.com/watch?v=" + trailerKey;
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(trailerUrl));
+                startActivity(intent);
+            }
         });
 
         btnFavorite.setOnClickListener(v -> {
+            if (movie == null) return;
 
             Map<String, Object> movieData = new HashMap<>();
             movieData.put("title", movie.getTitle());
@@ -96,7 +114,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
                     });
         });
     }
-    
 
     private void displayMovieDetails(Movie movie) {
         tvMovieTitle.setText(movie.getTitle());
@@ -109,7 +126,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     private void fetchReviews(int movieId) {
         TMDBApi api = RetrofitClient.getClient().create(TMDBApi.class);
-        Call<ReviewResponse> call = api.getReviews(movieId, "ebe03d995dffa21748ee1c932f8c2eb6");
+        Call<ReviewResponse> call = api.getReviews(movieId, API_KEY);
 
         call.enqueue(new Callback<ReviewResponse>() {
             @Override
@@ -123,7 +140,58 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ReviewResponse> call, Throwable t) {
-                Toast.makeText(MovieDetailsActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                Log.e("MovieDetailsActivity", "Reviews fetch failure: " + t.getMessage());
+            }
+        });
+    }
+
+    private void fetchMovieTrailer(int movieId) {
+        TMDBApi api = RetrofitClient.getClient().create(TMDBApi.class);
+        Call<VideoResponse> call = api.getVideos(movieId, API_KEY);
+
+        call.enqueue(new Callback<VideoResponse>() {
+            @Override
+            public void onResponse(Call<VideoResponse> call, Response<VideoResponse> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getResults() != null) {
+
+                    // Step 1: Scan for an official YouTube Trailer
+                    for (Video video : response.body().getResults()) {
+                        if ("YouTube".equalsIgnoreCase(video.getSite()) && "Trailer".equalsIgnoreCase(video.getType())) {
+                            trailerKey = video.getKey();
+                            break;
+                        }
+                    }
+
+                    // Step 2: Fallback to any generic YouTube segment if "Trailer" label is missing
+                    if (trailerKey == null) {
+                        for (Video video : response.body().getResults()) {
+                            if ("YouTube".equalsIgnoreCase(video.getSite())) {
+                                trailerKey = video.getKey();
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                // UI Processing: Activate or flag button based on search results
+                runOnUiThread(() -> {
+                    if (trailerKey != null && !trailerKey.isEmpty()) {
+                        btnTrailer.setEnabled(true);
+                        btnTrailer.setText("Watch Trailer");
+                    } else {
+                        btnTrailer.setEnabled(false);
+                        btnTrailer.setText("No Trailer Available");
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Call<VideoResponse> call, Throwable t) {
+                Log.e("MovieDetailsActivity", "Video API call error: " + t.getMessage());
+                runOnUiThread(() -> {
+                    btnTrailer.setEnabled(false);
+                    btnTrailer.setText("Error Loading Trailer");
+                });
             }
         });
     }

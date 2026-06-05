@@ -65,9 +65,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
                 int currentPos = holder.getAdapterPosition();
                 if (currentPos == RecyclerView.NO_POSITION) return;
 
-                // Local removal
-                MovieDatabaseHelper dbHelper = new MovieDatabaseHelper(v.getContext());
-                dbHelper.removeFavorite(movie.getTitle());
+
 
                 // Firestore removal (optional sync)
                 FirebaseFirestore firestore = FirebaseFirestore.getInstance();

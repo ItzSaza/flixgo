@@ -19,7 +19,6 @@ public class FavoritesActivity extends AppCompatActivity {
     RecyclerView recyclerFavorites;
     ArrayList<Movie> favoriteMovies;
     MovieAdapter adapter;
-    MovieDatabaseHelper dbHelper;
     ImageButton btnBack;
 
     @Override
