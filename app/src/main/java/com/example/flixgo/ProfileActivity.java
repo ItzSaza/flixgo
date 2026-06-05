@@ -13,7 +13,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class ProfileActivity extends AppCompatActivity {
 
     TextView txtEmail, txtUid;
-    Button btnLogout;
+    Button btnLogout, btnGoToFavorites;
 
     FirebaseAuth auth;
     FirebaseUser user;
@@ -26,6 +26,7 @@ public class ProfileActivity extends AppCompatActivity {
         txtEmail = findViewById(R.id.txtEmail);
         txtUid = findViewById(R.id.txtUid);
         btnLogout = findViewById(R.id.btnLogout);
+        btnGoToFavorites = findViewById(R.id.btnGoToFavorites);
 
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
@@ -34,6 +35,10 @@ public class ProfileActivity extends AppCompatActivity {
             txtEmail.setText("Email: " + user.getEmail());
             txtUid.setText("UID: " + user.getUid());
         }
+
+        btnGoToFavorites.setOnClickListener(v -> {
+            startActivity(new Intent(ProfileActivity.this, FavoritesActivity.class));
+        });
 
         btnLogout.setOnClickListener(v -> {
 

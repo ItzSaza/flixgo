@@ -33,7 +33,7 @@
                 android:layout_height="48dp"
                 android:layout_margin="16dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_launcher_foreground"
+                android:src="@drawable/ic_back"
                 android:tint="#FFFFFF" />
         </FrameLayout>
 
@@ -91,6 +91,15 @@
                 android:layout_marginTop="20dp"
                 android:backgroundTint="#E50914"
                 android:text="Watch Trailer"
+                android:textColor="#FFFFFF" />
+
+            <Button
+                android:id="@+id/btnFavorite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="#222222"
+                android:text="Add To Favorites"
                 android:textColor="#FFFFFF" />
 
             <TextView

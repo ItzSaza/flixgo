@@ -14,9 +14,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -27,10 +30,15 @@ public class MovieDetailsActivity extends AppCompatActivity {
     RecyclerView recyclerReviews;
     List<Review> reviewList;
     ReviewAdapter adapter;
-    Button btnTrailer;
+    Button btnTrailer, btnFavorite;
     ImageButton btnBack;
     ImageView imgMoviePoster;
     TextView tvMovieTitle, tvMovieReleaseDate, tvMovieRating;
+    MovieDatabaseHelper dbHelper;
+    Movie movie;
+    FirebaseFirestore firestore;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,14 +48,18 @@ public class MovieDetailsActivity extends AppCompatActivity {
         // Initialize Views
         recyclerReviews = findViewById(R.id.recyclerReviews);
         btnTrailer = findViewById(R.id.btnTrailer);
+        btnFavorite = findViewById(R.id.btnFavorite);
         btnBack = findViewById(R.id.btnBack);
         imgMoviePoster = findViewById(R.id.imgMoviePoster);
         tvMovieTitle = findViewById(R.id.tvMovieTitle);
         tvMovieReleaseDate = findViewById(R.id.tvMovieReleaseDate);
         tvMovieRating = findViewById(R.id.tvMovieRating);
 
+        dbHelper = new MovieDatabaseHelper(this);
+        firestore = FirebaseFirestore.getInstance();
+
         // Get Movie Data from Intent
-        Movie movie = (Movie) getIntent().getSerializableExtra("movie");
+        movie = (Movie) getIntent().getSerializableExtra("movie");
         if (movie != null) {
             displayMovieDetails(movie);
             fetchReviews(550); // Using 550 as a placeholder or you could add id to Movie class
@@ -64,7 +76,27 @@ public class MovieDetailsActivity extends AppCompatActivity {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=SUXWAEX2jlg"));
             startActivity(intent);
         });
+
+        btnFavorite.setOnClickListener(v -> {
+
+            Map<String, Object> movieData = new HashMap<>();
+            movieData.put("title", movie.getTitle());
+            movieData.put("releaseDate", movie.getReleaseDate());
+            movieData.put("rating", movie.getRating());
+            movieData.put("poster", movie.getPoster());
+
+            firestore.collection("favorites")
+                    .document(movie.getTitle())
+                    .set(movieData)
+                    .addOnSuccessListener(documentReference -> {
+                        Toast.makeText(this, "Saved to Favorites", Toast.LENGTH_SHORT).show();
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(this, "Firestore Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    });
+        });
     }
+    
 
     private void displayMovieDetails(Movie movie) {
         tvMovieTitle.setText(movie.getTitle());
