@@ -4,13 +4,13 @@ import com.google.gson.annotations.SerializedName;
 
 public class Video {
     @SerializedName("key")
-    private String key;       // YouTube video key
+    private String key;
 
     @SerializedName("site")
-    private String site;      // "YouTube"
+    private String site;
 
     @SerializedName("type")
-    private String type;      // "Trailer", "Teaser", etc.
+    private String type;
 
     @SerializedName("official")
     private boolean official;
