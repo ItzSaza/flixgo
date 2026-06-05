@@ -66,25 +66,23 @@ public class HomeActivity extends AppCompatActivity {
                     .into(imgFeatured);
 
             imgFeatured.setOnClickListener(v -> {
-                // FIXED: Included explicit TMDB ID (414906 for The Batman) using the 5-parameter constructor
-                Movie featuredMovie = new Movie(414906, "The Batman", "2022-03-01", 7.7, "/74xTEgt7R36Fpooo50r9T25onhq.jpg");
+                Movie featuredMovie = new Movie("The Batman", "2022-03-01", 7.7, "/74xTEgt7R36Fpooo50r9T25onhq.jpg");
                 Intent intent = new Intent(HomeActivity.this, MovieDetailsActivity.class);
                 intent.putExtra("movie", featuredMovie);
                 startActivity(intent);
             });
 
             // DATA
-            // FIXED: Added real TMDB IDs as the first parameter for all mock movies
             homeMovies = new ArrayList<>();
-            homeMovies.add(new Movie(414906, "The Batman", "2022-03-01", 7.7, "/74xTEgt7R36Fpooo50r9T25onhq.jpg")); // ID: 414906
-            homeMovies.add(new Movie(475557, "Joker", "2019-10-04", 8.2, "/rzdPqYx7Um4FUZeD8wpXqjAUcEm.jpg"));     // ID: 475557
-            homeMovies.add(new Movie(27205, "Inception", "2010-07-16", 8.4, "/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg"));    // ID: 27205
-            homeMovies.add(new Movie(157336, "Interstellar", "2014-11-07", 8.4, "/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg")); // ID: 157336
+            homeMovies.add(new Movie("The Batman", "2022-03-01", 7.7, "/74xTEgt7R36Fpooo50r9T25onhq.jpg"));
+            homeMovies.add(new Movie("Joker", "2019-10-04", 8.2, "/rzdPqYx7Um4FUZeD8wpXqjAUcEm.jpg"));
+            homeMovies.add(new Movie("Inception", "2010-07-16", 8.4, "/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg"));
+            homeMovies.add(new Movie("Interstellar", "2014-11-07", 8.4, "/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg"));
 
             topRatedMovies = new ArrayList<>();
-            topRatedMovies.add(new Movie(155, "The Dark Knight", "2008-07-18", 8.5, "/qJ2tW6WMUDux911r6m7haRef0WH.jpg"));      // ID: 155
-            topRatedMovies.add(new Movie(550, "Fight Club", "1999-10-15", 8.4, "/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg"));          // ID: 550
-            topRatedMovies.add(new Movie(299534, "Avengers: Endgame", "2019-04-26", 8.3, "/or06FN3Dka5tukK1e9sl16pB3iy.jpg")); // ID: 299534
+            topRatedMovies.add(new Movie("The Dark Knight", "2008-07-18", 8.5, "/qJ2tW6WMUDux911r6m7haRef0WH.jpg"));
+            topRatedMovies.add(new Movie("Fight Club", "1999-10-15", 8.4, "/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg"));
+            topRatedMovies.add(new Movie("Avengers: Endgame", "2019-04-26", 8.3, "/or06FN3Dka5tukK1e9sl16pB3iy.jpg"));
 
             setupRecycler(recyclerHome, homeMovies);
             setupRecycler(recyclerTopRated, topRatedMovies);
